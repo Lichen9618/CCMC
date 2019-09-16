@@ -8,8 +8,16 @@ namespace CrossChainContract
     {
         delegate object DynCall(string method, object[] args);
 
-        public static bool Main(string method, object[] args)
-        {            
+        public static object Main(string method, object[] args)
+        {
+            if (method == "processCrossChainTx")
+            {
+                byte[] Target = (byte[])args[0];
+                string operation = (string)args[1];
+                object[] parameters = new object[args.Length - 2];
+                args.CopyTo(parameters, 2);
+                return ProcessCrossChainTx(Target, operation, parameters);
+            }
             return true;
         }
 
