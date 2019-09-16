@@ -4,20 +4,36 @@ using Neo.SmartContract.Framework.Services.Neo;
 
 namespace CrossChainContract
 {
-    class Contract1 : SmartContract
+    class Contract : SmartContract
     {
-        public static bool Main(string method, object[] args)
+        delegate object DynCall(string method, object[] args);
+
+        public static object Main(string method, object[] args)
         {
-            if (Runtime.Trigger == TriggerType.Application)
+
+            if (method == "CreateCrossChainTx")
             {
-                if (method == "CreateCrossChainTx")
-                {
-                    return CreateCrossChainTransaction((byte[])args[0]);
-                }
+                return CreateCrossChainTransaction((byte[])args[0]);
             }
 
-            return false;
+            if (method == "processCrossChainTx")
+            {
+                byte[] Target = (byte[])args[0];
+                string operation = (string)args[1];
+                object[] parameters = new object[args.Length - 2];
+                args.CopyTo(parameters, 2);
+                return ProcessCrossChainTx(Target, operation, parameters);
+            }
+            return true;
         }
+
+        private static object ProcessCrossChainTx(byte[] Target, string operation, object[] args)
+        {
+            if (Target.Length != 20) return false;
+            DynCall TargetContract = (DynCall)Target.ToDelegate();
+            return TargetContract(operation, args);
+        }
+
 
         [Syscall("Neo.CrossChain.CreateTransaction")]
         public static extern bool CreateCrossChainTransaction(byte[] paraBytes);
