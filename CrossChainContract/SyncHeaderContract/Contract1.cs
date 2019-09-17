@@ -15,6 +15,10 @@ namespace SyncHeaderContract
                 {
                     return SyncHeader((byte[]) args[0]);
                 }
+                if (method == "GetBlockHeader")
+                {
+                    return GetHeader((ulong)args[0],(ulong)args[1]);
+                }
 
                 if (method == "GetCurrentHeight")
                 {
@@ -42,6 +46,9 @@ namespace SyncHeaderContract
 
         [Syscall("Neo.CrossChain.SyncBlockHeader")]
         public static extern bool SyncHeader(byte[] paraBytes);
+
+        [Syscall("Neo.CrossChain.GetHeaderByHeight")]
+        public static extern byte[] GetHeader(ulong chainID,ulong height);
 
         [Syscall("Neo.CrossChain.IntToString")]
         public static extern string ToIntString(byte[] paraBytes);
