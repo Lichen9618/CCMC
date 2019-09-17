@@ -7,7 +7,6 @@ namespace CrossChainContract
     class Contract : SmartContract
     {
         delegate object DynCall(string method, object[] args);
-
         public static object Main(string method, object[] args)
         {
 
@@ -19,22 +18,14 @@ namespace CrossChainContract
             if (method == "processCrossChainTx")
             {
                 byte[] Target = (byte[])args[0];
-                string operation = (string)args[1];
-                object[] parameters = new object[args.Length - 2];
+                string operation = "ProcessCrossChainTransfer";
+                object[] parameters = new object[args.Length - 1];
                 args.CopyTo(parameters, 2);
-                return ProcessCrossChainTx(Target, operation, parameters);
+                DynCall TargetContract = (DynCall)Target.ToDelegate();
+                return TargetContract(operation, parameters);
             }
             return true;
         }
-
-        private static object ProcessCrossChainTx(byte[] Target, string operation, object[] args)
-        {
-            if (Target.Length != 20) return false;
-            DynCall TargetContract = (DynCall)Target.ToDelegate();
-            return TargetContract(operation, args);
-        }
-
-
         [Syscall("Neo.CrossChain.CreateTransaction")]
         public static extern bool CreateCrossChainTransaction(byte[] paraBytes);
     }
