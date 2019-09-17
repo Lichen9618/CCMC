@@ -12,8 +12,19 @@ namespace CrossChainContract
 
             if (method == "CreateCrossChainTx")
             {
-                return CreateCrossChainTransaction((byte[])args[0]);
+                return CreateCrossChainTransaction((long)args[0], (byte[])args[1], (string)args[2], (byte[])args[3]);
             }
+
+            if (method == "GetCrossChainRequestID")
+            {
+                return Storage.Get("REQUEST_ID".AsByteArray().Concat((byte[]) args[0])).AsBigInteger();
+            }
+
+            if (method == "GetCrossChainRequest")
+            {
+                return Storage.Get("REQUEST".AsByteArray().Concat((byte[])args[0]).Concat((byte[])args[1])).AsBigInteger();
+            }
+
 
             if (method == "processCrossChainTx")
             {
@@ -27,6 +38,8 @@ namespace CrossChainContract
             return true;
         }
         [Syscall("Neo.CrossChain.CreateTransaction")]
-        public static extern bool CreateCrossChainTransaction(byte[] paraBytes);
+        public static extern bool CreateCrossChainTransaction(long chainID, byte[] contarctAddress, string functionName, byte[] paraBytes);
+
+
     }
 }
