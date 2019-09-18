@@ -30,9 +30,12 @@ namespace CrossChainContract
             {
                 byte[] Target = (byte[])args[0];
                 string operation = "ProcessCrossChainTransfer";
-                object[] parameters = new object[args.Length - 1];
-                args.CopyTo(parameters, 2);
                 DynCall TargetContract = (DynCall)Target.ToDelegate();
+                object[] parameters = new object[]
+                {
+                    (byte[])args[1],
+                    (int)args[2]
+                };
                 return TargetContract(operation, parameters);
             }
             return true;
