@@ -27,7 +27,7 @@ namespace CrossChainContract
             }
 
 
-            if (method == "processCrossChainTx")
+            if (method == "ProcessCrossChainTx")
             {
                 byte[] Target = (byte[])args[0];
                 string operation = (string)args[1];
