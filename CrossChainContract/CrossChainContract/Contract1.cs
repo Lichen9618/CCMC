@@ -38,7 +38,7 @@ namespace CrossChainContract
             return true;
         }
         [Syscall("Neo.CrossChain.CreateTransaction")]
-        public static extern bool CreateCrossChainTransaction(long chainID, byte[] contarctAddress, string functionName, byte[] paraBytes);
+        public static extern bool CreateCrossChainTransaction(long chainID, byte[] contractAddress, string functionName, byte[] paraBytes);
 
 
     }
