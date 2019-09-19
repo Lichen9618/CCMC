@@ -22,18 +22,14 @@ namespace SyncHeaderContract
 
                 if (method == "GetCurrentHeight")
                 {
-                    //获取本合约地址hash
-                    var contract = ExecutionEngine.ExecutingScriptHash;
                     var chainIDBytes = (byte[])args[0];
                     Runtime.Log("chain id is:"+ ToIntString(chainIDBytes));
-                    var key = contract.Concat("CURRENT_HEIGHT".AsByteArray()).Concat(chainIDBytes);
+                    var key = "CURRENT_HEIGHT".AsByteArray().Concat(chainIDBytes);
                     Runtime.Log("chain height key is:"+ToHexString(key));
                     return Storage.Get(key).AsBigInteger();
                 }
                 if (method == "GetBlockHeaderHash")
                 {
-                    //获取本合约地址hash
-                    var contract = ExecutionEngine.ExecutingScriptHash;
                     var chainIDBytes = (byte[])args[0];
                     var heightBytes = (byte[]) args[1];
                     var key = "HEADER_INDEX".AsByteArray().Concat(chainIDBytes).Concat(heightBytes);
