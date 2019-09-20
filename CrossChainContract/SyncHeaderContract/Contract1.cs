@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Neo.SmartContract.Framework;
 using Neo.SmartContract.Framework.Services.Neo;
 using Neo.SmartContract.Framework.Services.System;
@@ -7,33 +8,25 @@ namespace SyncHeaderContract
 {
     class Contract1 : SmartContract
     {
-        public static object Main(string method,object[] args)
+        public static object Main(string method, object[] args)
         {
             if (Runtime.Trigger == TriggerType.Application)
             {
                 if (method == "SyncBlockHeader")
                 {
-                    return SyncHeader((byte[]) args[0]);
+                    return SyncHeader((byte[])args[0]);
                 }
                 if (method == "GetBlockHeader")
                 {
-                    return GetHeader((ulong)args[0],(ulong)args[1]);
+                    return GetHeader((ulong)args[0], (ulong)args[1]);
                 }
-
                 if (method == "GetCurrentHeight")
                 {
-                    var chainIDBytes = (byte[])args[0];
-                    Runtime.Log("chain id is:"+ ToIntString(chainIDBytes));
-                    var key = "CURRENT_HEIGHT".AsByteArray().Concat(chainIDBytes);
-                    Runtime.Log("chain height key is:"+ToHexString(key));
-                    return Storage.Get(key).AsBigInteger();
+                    return GetCurrentHeight((ulong)args[0]);
                 }
                 if (method == "GetBlockHeaderHash")
                 {
-                    var chainIDBytes = (byte[])args[0];
-                    var heightBytes = (byte[]) args[1];
-                    var key = "HEADER_INDEX".AsByteArray().Concat(chainIDBytes).Concat(heightBytes);
-                    return Storage.Get(key);
+                    return GetBlockHeaderHash((ulong)args[0], (ulong)args[1]);
                 }
             }
 
@@ -44,7 +37,13 @@ namespace SyncHeaderContract
         public static extern bool SyncHeader(byte[] paraBytes);
 
         [Syscall("Neo.CrossChain.GetHeaderByHeight")]
-        public static extern byte[] GetHeader(ulong chainID,ulong height);
+        public static extern byte[] GetHeader(ulong chainID, ulong height);
+
+        [Syscall("Neo.CrossChain.GetCurrentHeight")]
+        public static extern ulong GetCurrentHeight(ulong chainID);
+
+        [Syscall("Neo.CrossChain.GetBlockHeaderHash")]
+        public static extern byte[] GetBlockHeaderHash(ulong chainID, ulong height);
 
         [Syscall("Neo.CrossChain.IntToString")]
         public static extern string ToIntString(byte[] paraBytes);
