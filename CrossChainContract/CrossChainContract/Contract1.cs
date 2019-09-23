@@ -28,20 +28,25 @@ namespace CrossChainContract
 
             if (method == "ProcessCrossChainTx")
             {
-                byte[] Target = (byte[])args[0];
-                string operation = "ProcessCrossChainTransfer";
+                var parameters = DeserializeParameters((byte[])args[0]);
+                byte[] Target = (byte[])parameters[0];
+                string operation = (string)parameters[1];
+                byte[] Address = (byte[])parameters[2];
+                ulong value = (ulong)parameters[3];
                 DynCall TargetContract = (DynCall)Target.ToDelegate();
-                object[] parameters = new object[]
+                object[] parameter = new object[]
                 {
-                    (byte[])args[1],
-                    (int)args[2]
+                    Address,
+                    value
                 };
-                return TargetContract(operation, parameters);
+                return TargetContract(operation, parameter);
             }
             return true;
         }
         [Syscall("Neo.CrossChain.CreateTransaction")]
         public static extern bool CreateCrossChainTransaction(long chainID, byte[] contractAddress, string functionName, byte[] paraBytes);
+        [Syscall("Neo.CrossChain.DeserializeParameters")]
+        public static extern object[] DeserializeParameters(byte[] source);
 
 
     }
