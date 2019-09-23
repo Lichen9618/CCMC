@@ -28,7 +28,7 @@ namespace CrossChainContract
 
             if (method == "ProcessCrossChainTx")
             {
-                var parameters = DeserializeParameters((byte[])args[0]);
+                var parameters = DeserializeParameters((byte[])args[0], (byte[])args[1]);
                 byte[] Target = (byte[])parameters[0];
                 string operation = (string)parameters[1];
                 byte[] Address = (byte[])parameters[2];
@@ -46,7 +46,7 @@ namespace CrossChainContract
         [Syscall("Neo.CrossChain.CreateTransaction")]
         public static extern bool CreateCrossChainTransaction(long chainID, byte[] contractAddress, string functionName, byte[] paraBytes);
         [Syscall("Neo.CrossChain.DeserializeParameters")]
-        public static extern object[] DeserializeParameters(byte[] source);
+        public static extern object[] DeserializeParameters(byte[] path, byte[] root);
 
 
     }
