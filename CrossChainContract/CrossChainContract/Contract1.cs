@@ -28,7 +28,7 @@ namespace CrossChainContract
 
             if (method == "ProcessCrossChainTx")
             {
-                var parameters = DeserializeParameters((byte[])args[0], (byte[])args[1]);
+                object[] parameters = DeserializeParameters((byte[])args[0], (byte[])args[1]);
                 byte[] Target = (byte[])parameters[0];
                 string operation = (string)parameters[1];
                 byte[] Address = (byte[])parameters[2];
@@ -39,7 +39,8 @@ namespace CrossChainContract
                     Address,
                     value
                 };
-                return TargetContract(operation, parameter);
+                //return TargetContract(operation, parameter);
+                return parameters.Length;
             }
             return true;
         }
